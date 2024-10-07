@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <title>QRコード生成アプリ</title>
+    <script src="qrcode.min.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f2f2f2;
+            margin: 0;
+            padding: 20px;
+        }
+        h1 {
+            text-align: center;
+        }
+        .container {
+            max-width: 500px;
+            background-color: #fff;
+            padding: 30px;
+            margin: auto;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        label {
+            display: block;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+        input[type="text"],
+        input[type="number"],
+        select {
+            width: 100%;
+            padding: 10px;
+            box-sizing: border-box;
+        }
+        input[type="color"] {
+            padding: 0;
+            border: none;
+            background: none;
+        }
+        .color-picker {
+            display: flex;
+            align-items: center;
+        }
+        .color-picker input[type="color"] {
+            margin-left: 10px;
+        }
+        button {
+            width: 100%;
+            padding: 15px;
+            background-color: #4CAF50;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        #qrcode {
+            text-align: center;
+            margin-top: 30px;
+        }
+        footer {
+            text-align: center;
+            margin-top: 40px;
+            color: #888;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>QRコード生成アプリ</h1>
+        <div class="form-group">
+            <label for="text">テキスト</label>
+            <input type="text" id="text" placeholder="テキストを入力">
+        </div>
+        <div class="form-group">
+            <label for="size">サイズ (ピクセル)</label>
+            <input type="number" id="size" value="200" min="100" max="1000">
+        </div>
+        <div class="form-group">
+            <label>前景色と背景色</label>
+            <div class="color-picker">
+                <label for="fgColor">前景色:</label>
+                <input type="color" id="fgColor" value="#000000">
+                <label for="bgColor">背景色:</label>
+                <input type="color" id="bgColor" value="#ffffff">
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="errorCorrectionLevel">エラー訂正レベル</label>
+            <select id="errorCorrectionLevel">
+                <option value="L">L (7%)</option>
+                <option value="M">M (15%)</option>
+                <option value="Q">Q (25%)</option>
+                <option value="H" selected>H (30%)</option>
+            </select>
+        </div>
+        <button onclick="generateQRCode()">QRコード生成</button>
+        <div id="qrcode"></div>
+    </div>
+    <footer>
+        &copy; 2024 ryomura <a href="https://github.com/ryomrt">github</a>
+    </footer>
+    <script>
+        function generateQRCode() {
+            var text = document.getElementById("text").value;
+            var size = parseInt(document.getElementById("size").value);
+            var fgColor = document.getElementById("fgColor").value;
+            var bgColor = document.getElementById("bgColor").value;
+            var errorCorrectionLevel = document.getElementById("errorCorrectionLevel").value;
+
+            // 入力チェック
+            if (text.trim() === "") {
+                alert("テキストを入力してください。");
+                return;
+            }
+
+            // 既存のQRコードをクリア
+            document.getElementById("qrcode").innerHTML = "";
+
+            // QRコードを生成
+            new QRCode(document.getElementById("qrcode"), {
+                text: text,
+                width: size,
+                height: size,
+                colorDark: fgColor,
+                colorLight: bgColor,
+                correctLevel: QRCode.CorrectLevel[errorCorrectionLevel]
+            });
+        }
+    </script>
+</body>
+</html>
